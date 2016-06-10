@@ -1,17 +1,21 @@
 package com.example.yangzhe.testleakcanary;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
+import android.view.View;
+import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
-
+    private Button btnGotoSingleInstance;
+    private Button btnGotoHandler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,9 +32,31 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        TextView textView = (TextView) findViewById(R.id.text_hello_world);
-        TestDataModel.getsDataInstance().setmReatainedTextView(textView);
+        btnGotoSingleInstance = (Button)findViewById(R.id.buttonGotoSinInsLeakActivity);
+        btnGotoSingleInstance.setOnClickListener(click);
+        btnGotoHandler = (Button)findViewById(R.id.buttonGotoHandlerLeakActivity);
+        btnGotoHandler.setOnClickListener(click);
     }
+
+    private View.OnClickListener click = new View.OnClickListener(){
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()){
+                case R.id.buttonGotoHandlerLeakActivity:
+                    Intent intent1 = new Intent(MainActivity.this,TestHanderLeakActivity.class);
+                    startActivity(intent1);
+                    break;
+
+                case R.id.buttonGotoSinInsLeakActivity:
+                    Intent intent2 = new Intent(MainActivity.this,TestSingleInstanceLeakActivity.class);
+                    startActivity(intent2);
+                    break;
+
+                default:
+                    break;
+            }
+        }
+    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
